@@ -25,7 +25,22 @@ class UserRepository:
         return self._users.get(user_id)
 
     def query(self, spec: QuerySpec) -> list[User]:
+        """Return users matching the query filters and pagination."""
         users = list(self._users.values())
         if spec.filters.get("active") is not None:
             users = [user for user in users if user.active is spec.filters["active"]]
         return users[spec.offset : spec.offset + spec.limit]
+
+
+def main() -> None:
+    """Run a small repository query."""
+    repository = UserRepository()
+    repository.add(User("u_1", "active@example.com"))
+    repository.add(User("u_2", "disabled@example.com", active=False))
+
+    active_users = repository.query(QuerySpec(filters={"active": True}, limit=10))
+    print(active_users)
+
+
+if __name__ == "__main__":
+    main()

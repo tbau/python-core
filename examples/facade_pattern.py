@@ -19,9 +19,24 @@ class UserFacade:
         self._outbox = outbox
 
     def register(self, command: RegisterUser) -> None:
+        """Register a user and queue a domain event."""
         self._outbox.add(
             OutboxMessage(
                 name="user.registered",
                 payload={"user_id": command.user_id, "email": command.email},
             )
         )
+
+
+def main() -> None:
+    """Call the facade and inspect the queued outbox message."""
+    outbox = MemoryOutbox()
+    facade = UserFacade(outbox)
+
+    facade.register(RegisterUser(user_id="user_123", email="person@example.com"))
+
+    print(outbox.pending()[0].payload)
+
+
+if __name__ == "__main__":
+    main()
