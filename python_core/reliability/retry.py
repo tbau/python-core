@@ -27,6 +27,8 @@ def retry_sync(
         try:
             return operation()
         except retry_on as exc:
+            if policy.attempts == 1:
+                raise
             last_error = exc
             if attempt == policy.attempts - 1:
                 break
@@ -48,6 +50,8 @@ async def retry_async(
         try:
             return await operation()
         except retry_on as exc:
+            if policy.attempts == 1:
+                raise
             last_error = exc
             if attempt == policy.attempts - 1:
                 break

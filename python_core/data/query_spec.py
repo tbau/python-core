@@ -13,3 +13,9 @@ class QuerySpec:
     sort_by: tuple[str, ...] = ()
     limit: int = 100
     offset: int = 0
+
+    def __post_init__(self) -> None:
+        if self.limit <= 0:
+            raise ValueError("limit must be positive")
+        if self.offset < 0:
+            raise ValueError("offset cannot be negative")

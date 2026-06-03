@@ -17,7 +17,7 @@ test conventions.
 - Retry delay calculation is bounded.
 - Timeout settings are passed to external clients.
 - Idempotency checkers generate keys, add unseen keys, and detect duplicates.
-- Transactions commit on success and roll back on failure.
+- Transactions commit on success, roll back on failure, and close sessions.
 - Excel profiles reject missing sheets or columns.
 - Outbox dispatch marks messages as sent after publishing.
 - Repositories and query handlers return predictable results for common filters.

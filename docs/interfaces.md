@@ -8,7 +8,7 @@ Interfaces are grouped by responsibility:
 - `interfaces/auth`: authentication, authorization, ownership, password hashing,
   and token services.
 - `interfaces/data`: repositories, queries, caches, and serializers.
-- `interfaces/database`: connector, transaction, and unit of work.
+- `interfaces/database`: connector and transaction boundaries.
 - `interfaces/files`: parsers, writers, and spreadsheet writers.
 - `interfaces/integration`: external APIs, Redis, queues, and outbox.
 - `interfaces/middleware`: request context processing.

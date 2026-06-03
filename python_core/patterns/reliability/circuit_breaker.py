@@ -16,6 +16,8 @@ class CircuitBreaker:
     """Tiny failure-count circuit breaker example."""
 
     def __init__(self, *, failure_limit: int) -> None:
+        if failure_limit < 1:
+            raise ValueError("failure_limit must be at least 1")
         self.failure_limit = failure_limit
         self.failures = 0
         self.open = False

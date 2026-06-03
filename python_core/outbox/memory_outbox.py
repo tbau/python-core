@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import replace
 from datetime import UTC, datetime
 
+from python_core.exceptions import OutboxError
 from python_core.outbox.outbox_message import OutboxMessage
 
 
@@ -24,5 +25,8 @@ class MemoryOutbox:
 
     def mark_sent(self, message_id: str) -> None:
         """Mark a message as sent."""
-        message = self._messages[message_id]
+        try:
+            message = self._messages[message_id]
+        except KeyError as exc:
+            raise OutboxError(f"outbox message not found: {message_id}") from exc
         self._messages[message_id] = replace(message, sent_at=datetime.now(UTC))

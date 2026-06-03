@@ -18,7 +18,7 @@
 
 ## Naming
 
-- Use concrete names for adapters: `SQLAlchemyUnitOfWork`, `SQLAlchemyDatabaseConnector`, `ApiClient`.
-- Use capability names for interfaces: `UnitOfWork`, `FileParser`, `EventLogger`.
+- Use concrete names for adapters: `SQLAlchemyDatabaseConnector`, `ApiClient`.
+- Use capability names for interfaces: `FileParser`, `EventLogger`.
 - Avoid names like `Manager`, `Helper`, or `Utils` unless the scope is truly
   generic.

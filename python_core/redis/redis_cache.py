@@ -20,6 +20,8 @@ class RedisCache:
         if ttl_seconds is None:
             self._client.set(key, value)
             return
+        if ttl_seconds <= 0:
+            raise ValueError("ttl_seconds must be positive")
         self._client.setex(key, ttl_seconds, value)
 
     def delete(self, key: str) -> None:

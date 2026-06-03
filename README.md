@@ -10,9 +10,9 @@ that are easy to change.
 
 - Reliability primitives for retry policy interfaces, retry strategies,
   timeouts, and idempotency.
-- External API client scaffolding built on the Python standard library.
-- Database interfaces plus SQLAlchemy connector, transaction, and unit-of-work
-  adapters.
+- External API client scaffolding built on the Python standard library, with an
+  optional `requests` transport.
+- Database interfaces plus SQLAlchemy connector and transaction adapters.
 - File parser/writer interfaces and customizable spreadsheet workbook writers.
 - Class-named modules under `python_core/interfaces`, `python_core/db`,
   `python_core/external_api`, `python_core/files`, and `python_core/reliability`.
@@ -55,6 +55,18 @@ tests/                     starter test suite
 
 ## Install For Development
 
+For a fully pinned environment that installs every optional adapter and tool in
+this repo:
+
+```powershell
+python -m pip install -r requirements.txt
+python -m pip install -e . --no-deps
+python -m pytest
+```
+
+For a lighter editable install that lets pip resolve current compatible
+versions:
+
 ```powershell
 python -m pip install -e ".[dev,api,db,excel]"
 python -m pytest
@@ -64,8 +76,11 @@ Install only the extras you need in downstream projects:
 
 ```powershell
 python -m pip install -e ".[api]"
+python -m pip install -e ".[auth]"
 python -m pip install -e ".[db]"
 python -m pip install -e ".[excel]"
+python -m pip install -e ".[redis]"
+python -m pip install -e ".[requests]"
 python -m pip install -e ".[security]"
 ```
 

@@ -30,3 +30,6 @@ class Transaction(Protocol):
 
     async def rollback(self) -> None:
         """Rollback pending work."""
+
+    async def close(self) -> None:
+        """Close transaction resources, rolling back unfinished work."""

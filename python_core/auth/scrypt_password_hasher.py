@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import base64
+import binascii
 import hashlib
 import hmac
 import secrets
@@ -47,11 +48,14 @@ class ScryptPasswordHasher:
 
     def verify(self, password: str, encoded: str) -> bool:
         """Return True when password matches an encoded hash."""
-        algorithm, n, r, p, salt, expected = encoded.split("$", maxsplit=5)
-        if algorithm != self.algorithm:
+        try:
+            algorithm, n, r, p, salt, expected = encoded.split("$", maxsplit=5)
+            if algorithm != self.algorithm:
+                return False
+            expected_bytes = self._unb64(expected)
+            actual = self._digest(password, self._unb64(salt), int(n), int(r), int(p))
+        except (binascii.Error, TypeError, ValueError):
             return False
-        expected_bytes = self._unb64(expected)
-        actual = self._digest(password, self._unb64(salt), int(n), int(r), int(p))
         return hmac.compare_digest(actual, expected_bytes)
 
     def _digest(self, password: str, salt: bytes, n: int, r: int, p: int) -> bytes:

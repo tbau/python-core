@@ -7,7 +7,7 @@ from typing import Any
 from python_core.auth.identity import Identity
 from python_core.auth.jwt_claims import JwtClaims
 from python_core.auth.jwt_settings import JwtSettings
-from python_core.exceptions import AuthenticationError, ConfigurationError
+from python_core.exceptions import AuthenticationError, ConfigurationError, ValidationError
 
 
 class JwtTokenService:
@@ -28,13 +28,20 @@ class JwtTokenService:
         )
         payload = self._claims_to_payload(claims)
         if extra:
+            reserved = self._reserved_claims()
+            overlap = reserved.intersection(extra)
+            if overlap:
+                raise ValidationError(
+                    f"extra jwt claims cannot override reserved claims: {sorted(overlap)}"
+                )
             payload.update(extra)
         return self._jwt().encode(payload, self.settings.secret, algorithm=self.algorithm)
 
     def verify(self, token: str) -> Identity:
         """Verify a token and return its identity."""
+        jwt = self._jwt()
         try:
-            payload = self._jwt().decode(
+            payload = jwt.decode(
                 token,
                 self.settings.secret,
                 algorithms=[self.algorithm],
@@ -44,8 +51,11 @@ class JwtTokenService:
             )
         except Exception as exc:
             raise AuthenticationError("invalid jwt") from exc
+        subject = payload.get("sub")
+        if not subject:
+            raise AuthenticationError("invalid jwt")
         return JwtClaims(
-            subject=str(payload["sub"]),
+            subject=str(subject),
             issuer=payload.get("iss"),
             audience=payload.get("aud"),
             roles=set(payload.get("roles", [])),
@@ -78,5 +88,8 @@ class JwtTokenService:
         return payload
 
     def _extra_claims(self, payload: dict[str, Any]) -> dict[str, Any]:
-        reserved = {"sub", "iss", "aud", "iat", "nbf", "exp", "roles", "permissions"}
+        reserved = self._reserved_claims()
         return {key: value for key, value in payload.items() if key not in reserved}
+
+    def _reserved_claims(self) -> set[str]:
+        return {"sub", "iss", "aud", "iat", "nbf", "exp", "roles", "permissions"}

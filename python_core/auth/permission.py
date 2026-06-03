@@ -20,5 +20,9 @@ class Permission:
     @classmethod
     def parse(cls, value: str) -> "Permission":
         """Parse a resource:action permission string."""
+        if ":" not in value:
+            raise ValueError("permission must use resource:action format")
         resource, action = value.split(":", maxsplit=1)
+        if not resource or not action:
+            raise ValueError("permission resource and action cannot be blank")
         return cls(action=action, resource=resource)

@@ -26,7 +26,6 @@ from python_core.interfaces.data.repository import Repository
 from python_core.interfaces.data.serializer import Serializer
 from python_core.interfaces.database.database_connector import DatabaseConnector
 from python_core.interfaces.database.transaction import Transaction
-from python_core.interfaces.database.unit_of_work import UnitOfWork
 from python_core.interfaces.files.file_parser import FileParser
 from python_core.interfaces.files.file_writer import FileWriter
 from python_core.interfaces.files.spreadsheet_writer import SpreadsheetWriter
@@ -68,5 +67,4 @@ __all__ = [
     "TokenIssuer",
     "TokenVerifier",
     "Transaction",
-    "UnitOfWork",
 ]

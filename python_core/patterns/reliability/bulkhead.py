@@ -16,6 +16,8 @@ class Bulkhead:
     """Semaphore-backed concurrency limiter for one kind of work."""
 
     def __init__(self, max_concurrent: int) -> None:
+        if max_concurrent < 1:
+            raise ValueError("max_concurrent must be at least 1")
         self._semaphore = BoundedSemaphore(max_concurrent)
 
     def run(self, operation: Callable[[], T]) -> T:
